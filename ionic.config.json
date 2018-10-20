@@ -1,0 +1,7 @@
+{
+  "name": "today-m",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}
