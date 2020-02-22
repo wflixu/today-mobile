@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:leancloud_storage/leancloud.dart';
 
-import './pages/login.dart';
 
-void main() => runApp(MyApp());
+import './pages/test_page.dart';
+import './pages/home.dart';
+import './pages/my.dart';
+
+void main() async {
+     LeanCloud.initialize('awgkVY8XvUY5oWtvmzRH6ylj-gzGzoHsz', 'GJnJ1a8KVnaVLquMKj6uSllD', server: 'https://awgkvy8x.lc-cn-n1-shared.com',queryCache: LCQueryCache());
+    runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -10,7 +17,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'today mobile',
       theme: ThemeData(
-       
         primarySwatch: Colors.blue,
       ),
       home: MyHomePage(title: 'Today'),
@@ -28,13 +34,13 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int currentIndex = 1;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
+  List<StatefulWidget> pageList = [
+    HomePage(),
+    TestPage(),
+    MyPage(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -43,26 +49,30 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-           
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-            RaisedButton(
-               onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage(title: 'login',)),
-                  );
-               },
-                child: Text('Go login!'),
-              ),
-          ],
-        ),
+      body: pageList[currentIndex],
+ 
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon:Icon(Icons.home),
+            title: Text('home')
+          ),
+          BottomNavigationBarItem(
+            icon:Icon(Icons.pages),
+            title: Text('test')
+          ),
+          BottomNavigationBarItem(
+            icon:Icon(Icons.person),
+            title: Text('my')
+          ),
+        ],
+        currentIndex: currentIndex,
+        onTap: (idx){
+          setState(() {
+             this.currentIndex = idx;
+          });
+          
+        },
       ),
     );
   }
