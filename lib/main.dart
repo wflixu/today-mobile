@@ -6,8 +6,11 @@ import './pages/test_page.dart';
 import './pages/home.dart';
 import './pages/my.dart';
 
+import 'config/app_config.dart';
+
 void main() async {
-     LeanCloud.initialize('awgkVY8XvUY5oWtvmzRH6ylj-gzGzoHsz', 'GJnJ1a8KVnaVLquMKj6uSllD', server: 'https://awgkvy8x.lc-cn-n1-shared.com',queryCache: LCQueryCache());
+    LeanCloud.initialize(AppConfig.appId, AppConfig.appKey, server: AppConfig.server,queryCache: LCQueryCache());
+    print(new LCUser().username);
     runApp(MyApp());
 }
 

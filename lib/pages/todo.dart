@@ -8,8 +8,10 @@ class TodoPage extends StatefulWidget {
 
 class _TodoPageState extends State<TodoPage> {
   void _addTodo ()  async{
-      Todo todo = new Todo('todo 1');
+      Todo todo = new Todo('');
       print(todo.desc);
+      todo['desc'] = 'test haha';
+      todo['completed'] = false;
       await todo.save();
       print('add todo success ');
 

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:today_mobile/demos/draw_page.dart';
 
 import 'login.dart';
 
@@ -15,7 +16,6 @@ class _TestPageState extends State<TestPage> {
        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            
             RaisedButton(
                onPressed: () {
                   Navigator.push(
@@ -24,8 +24,16 @@ class _TestPageState extends State<TestPage> {
                   );
                },
                 child: Text('Go login!'),
-              ),
-             
+            ),
+            RaisedButton(
+               onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => DrawPage()),
+                  );
+               },
+                child: Text('go draw'),
+            ),
           ],
         ),
     );
