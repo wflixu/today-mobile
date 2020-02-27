@@ -15,7 +15,7 @@ class _DrawPageState extends State<DrawPage> {
       key: _globalKey,
       appBar: AppBar(
         title: Text('draw bar'),
-        leading: IconButton(icon: Icon(Icons.apps) , onPressed: (){
+        leading: IconButton(icon: Icon(Icons.menu) , onPressed: (){
            _globalKey.currentState.openDrawer();
         }),
       ),

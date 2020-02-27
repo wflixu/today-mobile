@@ -14,7 +14,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  int _counter = 0;
   TextEditingController _usernameCtrl = new TextEditingController();
   TextEditingController _passwordCtrl = new TextEditingController();
   GlobalKey  _formKey = new GlobalKey();
@@ -24,7 +23,9 @@ class _LoginPageState extends State<LoginPage> {
   void _login(String username,String password) async {
     print('start login');
     LCUser user = await LCUser.login(username, password);
+    print(user.username);
     print(user.sessionToken);
+    Navigator.pushReplacementNamed(context, '/');
   }
 
   @override
@@ -92,15 +93,6 @@ class _LoginPageState extends State<LoginPage> {
                      textColor: Colors.white,
                    )
                  ),
-              ),
-               RaisedButton(
-               onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => TodoPage()),
-                  );
-               },
-                child: Text('Go todo'),
               ),
           ],
         ),
