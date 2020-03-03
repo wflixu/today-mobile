@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
 
 
    void _getTodos() async {
-      LCObject.registerSubclass<Todo>('Todo', () => new Todo(''));
+    LCObject.registerSubclass<Todo>('Todo', () => new Todo(''));
     LCQuery<Todo> lcq = LCQuery<Todo>('Todo');
      List<Todo> list = await lcq.find();
      setState(() {
@@ -34,6 +34,27 @@ class _HomePageState extends State<HomePage> {
       this._getTodos();
    }
 
+   void _toggleTodo(int index) async {
+      Todo todo = _todos[index];
+      todo['completed'] = ! todo['completed'];
+      LCObject res = await todo.save();
+      if(res!=null){
+        setState(() {
+          _todos[index]['completed'] = todo['completed'];
+        });
+      }
+   }
+   void _deleteTodo(int index) async{
+       Todo todo = _todos[index];
+       var  res =  await todo.delete();
+       if(res){
+         print(todo['objectId']);
+         setState(() {
+           _todos.remove(todo);
+         });
+       }
+   }
+
   @override void initState()  {
     super.initState();
   }
@@ -48,12 +69,11 @@ class _HomePageState extends State<HomePage> {
        children: <Widget>[
          Container(
            child: Row(
-
              children: <Widget>[
                Container(
                  width: 300,
+                 height:42,
                  child: TextField(
-                  
                     onChanged: (value){
                        setState(() {
                          _desc = value;
@@ -76,25 +96,26 @@ class _HomePageState extends State<HomePage> {
          
          Container(
            color: Colors.cyanAccent,
-           height: 100,
+           height: 400,
            width: double.infinity,
            child: ListView.builder(
              itemCount: _todos.length,
              itemBuilder: (context,index){
                final todo = _todos[index];
                return ListTile(
+                 leading: Icon(todo['completed']? Icons.check_box:Icons.check_box_outline_blank),
                  title: Text(todo['desc']),
-                 subtitle: Text(todo.completed.toString()),
-               );
+                 onTap: (){
+                   _toggleTodo(index);
+                 },
+                 onLongPress: (){
+                      _deleteTodo(index);
+                 },
+                );
              },
            ),
          ),
-         Container(
-           child: RaisedButton(
-             child: Text('GET TODOS'),
-             onPressed:_getTodos
-            ),
-         )
+        
        ],
     );
   }

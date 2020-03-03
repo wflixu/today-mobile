@@ -16,16 +16,23 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController _usernameCtrl = new TextEditingController();
   TextEditingController _passwordCtrl = new TextEditingController();
-  GlobalKey  _formKey = new GlobalKey();
+  GlobalKey<FormState> _loginKey = new GlobalKey<FormState>();
 
 
 
-  void _login(String username,String password) async {
+  void _login() async {
+    
     print('start login');
-    LCUser user = await LCUser.login(username, password);
-    print(user.username);
-    print(user.sessionToken);
-    Navigator.pushReplacementNamed(context, '/');
+    var loginForm = _loginKey.currentState;
+    if(loginForm.validate()){
+       LCUser user = await LCUser.login(_usernameCtrl.text, _passwordCtrl.text);
+       print(user.username);
+       print(user.sessionToken);
+       Navigator.pushReplacementNamed(context, '/');
+    }else{
+
+    }
+    
   }
 
   @override
@@ -45,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
              Form(
-                key: _formKey,
+                key: _loginKey,
                 autovalidate: true,
                  child: Column(
                  children:<Widget>[
@@ -71,28 +78,33 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                       keyboardType: TextInputType.text,
                       obscureText: true,
+                      validator: (value){
+                         return value.length < 3 ? "密码长度不够3位" : null;
+                      },
                       controller: _passwordCtrl,
                    )
                  ] 
                ),
               ),
               SizedBox(
-                 height:50,
-                 width: double.infinity,
-                 child: Padding(
-                   padding: EdgeInsets.fromLTRB(20.0, 0.0, 20, 0.0),
-                   child: RaisedButton(
+                 width:340.0,
+                 height:42.0,
+                 child: RaisedButton(
                      color: Colors.blueAccent,
                      onPressed: () {
-                        _login(_usernameCtrl.text,_passwordCtrl.text);
-                        // if((_formKey.currentState as FormState).validate()){
-                        //   print('submit data');
-                        // }
-                      },
-                     child: Text("submit "),
+                        _login();
+              
+                    },
                      textColor: Colors.white,
+                     child: Text(
+                       "登录",
+                       style: TextStyle(
+                         fontSize: 18.0
+                       ),
+                     ),
+
                    )
-                 ),
+                 
               ),
           ],
         ),
