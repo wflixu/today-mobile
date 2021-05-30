@@ -1,140 +1,113 @@
 import 'package:flutter/material.dart';
-import 'package:leancloud_storage/leancloud.dart';
-import 'package:today_mobile/pages/todo.dart';
+import 'package:today_mobile/demos/bar.dart';
+import 'package:today_mobile/demos/foo.dart';
 
-
-import './pages/test_page.dart';
-import './pages/home.dart';
-import './pages/my.dart';
-
-import 'config/app_config.dart';
-import 'pages/login.dart';
-
-void main() async {
-    LeanCloud.initialize(AppConfig.appId, AppConfig.appKey, server: AppConfig.server,queryCache: LCQueryCache());
-    runApp(App());
+void main() {
+  runApp(MyApp());
 }
 
-class App extends StatefulWidget {
-  @override
-  _AppState createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  @override
-  void initState() {
-    super.initState();
-  }
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'today mobile',
+      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      onGenerateRoute:(RouteSettings settings){
-        print('routing');
-
-        return MaterialPageRoute(builder: (context){
-            String routeName = settings.name;
-              print(routeName);
-            }
-        );
-      },
-      initialRoute:'/',
-      //注册路由表
-      routes:{
-        "/":(context) => MainPage(title: 'Today'),
-        "login":(context) =>  LoginPage(title: 'Login'),
-        "todo":(context) =>  TodoPage(),
-      } ,
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
 
-class MainPage extends StatefulWidget {
-  MainPage({Key key, this.title}) : super(key: key);
-  
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
   final String title;
-  
 
   @override
-  _MainPageState createState() => _MainPageState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MainPageState extends State<MainPage> {
-  int currentIndex = 1;
+class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
 
-  void _checkLogin() async {
-     LCUser user = await LCUser.getCurrent();
-     if(user==null){
-        print('not login');
-        Navigator.pushReplacementNamed(context,'login');
-     }else{
-       print('login_user:'+user.username);
-     }
+   _incrementCounter() async {
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      _counter++;
+    });
+    // Navigator.push(context, MaterialPageRoute(builder: (context){
+    //   return Foo();
+    // }));
+
+    var result = await Navigator.push(context, MaterialPageRoute(builder: (context){
+      return Bar(text: 'test boar');
+    }));
   }
 
-  _loginout () async {
-     await LCUser.logout();
-     print('login out !');
-     LCUser user = await LCUser.getCurrent();
-     print(user.username);
-  }
-  
-  List<StatefulWidget> pageList = [
-    HomePage(),
-    TestPage(),
-    MyPage(),
-  ];
-
- 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _checkLogin();
-  }
   @override
   Widget build(BuildContext context) {
-    
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
-        actions: <Widget>[
-           IconButton(
-             icon: Icon(Icons.pause_circle_outline),
-              onPressed: _loginout
-            )
-        ],
       ),
-      body: pageList[currentIndex],
-
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon:Icon(Icons.home),
-            title: Text('home')
-          ),
-          BottomNavigationBarItem(
-            icon:Icon(Icons.pages),
-            title: Text('test')
-          ),
-          BottomNavigationBarItem(
-            icon:Icon(Icons.person),
-            title: Text('my')
-          ),
-        ],
-        currentIndex: currentIndex,
-        onTap: (idx){
-          setState(() {
-             this.currentIndex = idx;
-          });
-          
-        },
+      body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
+        child: Column(
+          // Column is also a layout widget. It takes a list of children and
+          // arranges them vertically. By default, it sizes itself to fit its
+          // children horizontally, and tries to be as tall as its parent.
+          //
+          // Invoke "debug painting" (press "p" in the console, choose the
+          // "Toggle Debug Paint" action from the Flutter Inspector in Android
+          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+          // to see the wireframe for each widget.
+          //
+          // Column has various properties to control how it sizes itself and
+          // how it positions its children. Here we use mainAxisAlignment to
+          // center the children vertically; the main axis here is the vertical
+          // axis because Columns are vertical (the cross axis would be
+          // horizontal).
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headline4,
+            ),
+          ],
+        ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
